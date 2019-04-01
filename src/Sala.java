@@ -1,15 +1,14 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sala {
     private static int nrSali = 0;
-    int id;
-    int nrLocuri;
-    List<Loc> locuri;
-    Spectacol spectacol;
+    private int id;
+    private int nrLocuri;
+    private List<Loc> locuri;
 
-    public Sala(int nrLocuri, Spectacol spectacol) {
+    public Sala(int nrLocuri) {
         this.nrLocuri = nrLocuri;
-        this.spectacol = spectacol;
         initializareSala();
 
         nrSali++;
@@ -27,17 +26,10 @@ public class Sala {
     public List<Loc> getLocuri() {
         return locuri;
     }
-
-    public Spectacol getSpectacol() {
-        return spectacol;
-    }
-
-    public void setSpectacol(Spectacol spectacol) {
-        this.spectacol = spectacol;
-    }
     
     public void initializareSala()
     {
+        locuri = new ArrayList<>();
         for(int i = 1; i <= nrLocuri; i++)
         {
             locuri.add(new Loc(i,this,true));
@@ -47,7 +39,18 @@ public class Sala {
     public void actualizeazaLoc(int id)
     {
         Loc loc = locuri.get(id);
-        loc.liber = !loc.liber;
+        loc.setLiber(!loc.isLiber());
+    }
+
+    public Loc gasesteLoc() {
+        for (int i = 0; i < nrLocuri; i++)
+        {
+            if (locuri.get(i).isLiber()) {
+                actualizeazaLoc(i);
+                return locuri.get(i);
+            }
+        }
+        return null;
     }
 
 

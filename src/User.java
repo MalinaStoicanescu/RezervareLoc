@@ -24,6 +24,18 @@ public abstract class User {
         return parola;
     }
 
+    public static int getNrUseri() {
+        return nrUseri;
+    }
+
+    public static void setNrUseri(int nrUseri) {
+        User.nrUseri = nrUseri;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public abstract void adaugaRezervare(Rezervare rezervare);
     public abstract void stergeRezervare(Rezervare rezervare);
 }

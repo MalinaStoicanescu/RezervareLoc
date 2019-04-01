@@ -1,7 +1,7 @@
 public class Loc {
-    int id;
-    Sala sala;
-    boolean liber;
+    private int id;
+    private Sala sala;
+    private boolean liber;
 
     public Loc(int id, Sala sala, boolean liber) {
         this.id = id;

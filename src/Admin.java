@@ -8,18 +8,20 @@ public class Admin extends User {
         FULLOPTION
     }
 
+    
+
     public Admin(String nume, String parola) {
         super(nume, parola);
     }
 
     @Override
     public void adaugaRezervare(Rezervare rezervare){
-        rezervare.getUser().adaugaRezervare(rezervare);
+        rezervare.getClient().adaugaRezervare(rezervare);
 
     }
 
     @Override
     public void stergeRezervare(Rezervare rezervare){
-        rezervare.getUser().stergeRezervare(rezervare);
+        rezervare.getClient().stergeRezervare(rezervare);
     }
 }

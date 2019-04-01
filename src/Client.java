@@ -3,11 +3,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Client extends User {
+
     SortedSet<Rezervare> rezervari;
 
     public Client(String nume, String parola) {
         super(nume, parola);
         rezervari = new TreeSet<>(Comparator.comparing(Rezervare::getId));
+
     }
 
     public SortedSet<Rezervare> getRezervari() {
@@ -20,14 +22,14 @@ public class Client extends User {
 
     @Override
     public void adaugaRezervare(Rezervare rezervare){
-        if (rezervare.getUser().getId() == this.getId()){
+        if (rezervare.getClient().getId() == this.getId()){
             rezervari.add(rezervare);
         }
     }
 
     @Override
     public void stergeRezervare(Rezervare rezervare){
-        if (rezervare.getUser().getId() == this.getId()) {
+        if (rezervare.getClient().getId() == this.getId()) {
             rezervari.remove(rezervare);
         }
     }

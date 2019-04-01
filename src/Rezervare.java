@@ -1,16 +1,15 @@
-import java.util.List;
-
 public class Rezervare {
     private static int nrRezervari=0;
-    int id;
-    Spectacol spectacol;
-    Loc loc;
-    User user;
+    private int id;
+    private Spectacol spectacol;
+    private Client client;
+    private Loc loc;
 
-    public Rezervare(int id, Spectacol spectacol, Loc loc, User user) {
+
+    public Rezervare( Spectacol spectacol,Loc loc, Client client) {
         this.spectacol = spectacol;
         this.loc = loc;
-        this.user = user;
+        this.client = client;
         nrRezervari++;
         this.id = nrRezervari;
     }
@@ -21,6 +20,14 @@ public class Rezervare {
 
     public static void setNrRezervari(int nrRezervari) {
         Rezervare.nrRezervari = nrRezervari;
+    }
+
+    public Loc getLoc() {
+        return loc;
+    }
+
+    public void setLoc(Loc loc) {
+        this.loc = loc;
     }
 
     public int getId() {
@@ -39,19 +46,11 @@ public class Rezervare {
         this.spectacol = spectacol;
     }
 
-    public Loc getLoc() {
-        return loc;
+    public Client getClient() {
+        return client;
     }
 
-    public void setLoc(Loc loc) {
-        this.loc = loc;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

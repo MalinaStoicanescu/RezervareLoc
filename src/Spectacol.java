@@ -2,10 +2,14 @@ import java.util.Date;
 import java.util.List;
 
 public class Spectacol {
+    private static int nrSpectacole = 0;
+    private int id;
+
     private String titlu;
     private int nrLocuri;
     private Sala sala;
     Date data;
+    int durata;
 
     public String getTitlu() {
         return titlu;
@@ -13,14 +17,6 @@ public class Spectacol {
 
     public void setTitlu(String titlu) {
         this.titlu = titlu;
-    }
-
-    public int getNrLocuri() {
-        return nrLocuri;
-    }
-
-    public void setNrLocuri(int nrLocuri) {
-        this.nrLocuri = nrLocuri;
     }
 
     public Sala getSala() {
@@ -47,14 +43,27 @@ public class Spectacol {
         this.durata = durata;
     }
 
-    public Spectacol(String titlu, int nrLocuri, Sala sala, Date data, int durata) {
+    public Spectacol(String titlu, Sala sala, Date data, int durata) {
         this.titlu = titlu;
-        this.nrLocuri = nrLocuri;
         this.sala = sala;
         this.data = data;
         this.durata = durata;
+        nrSpectacole ++;
+        id = nrSpectacole;
     }
 
-    int durata;
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return getId()+". "+getTitlu() + " : " + getData();
+    }
+
+
+
+
+
 
 }
