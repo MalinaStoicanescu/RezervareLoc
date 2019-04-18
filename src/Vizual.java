@@ -1,3 +1,12 @@
+import database.DatabaseSQL;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Vizual {
@@ -32,13 +41,19 @@ public class Vizual {
         System.out.println("1. Vizualizeaza rezervarile");
         System.out.println("2. Alege un spectacol");
         System.out.println("3. Deconecteaza-te");
+        if (service.getClientLogat().getIsAdmin()==1) {
+            System.out.println("4. Adauga un spectacol");
+        }
+        if (service.getClientLogat().getIsAdmin()==1) {
+            System.out.println("5. Adauga o sala");
+        }
     }
 
 
 
     private int citesteOptiune(){
             int optiune = citesteInt();
-            if (optiune >= 1 && optiune <=3){
+            if (optiune >= 1 && optiune <=5){
                 return optiune;
 
             }
@@ -70,6 +85,16 @@ public class Vizual {
                 case 3:
                     deconecteazaClient();
                     break;
+                case 4:
+                    if (service.getClientLogat().getIsAdmin()==1) {
+                        adaugaSpectacol();
+                        break;
+                    }
+                case 5:
+                    if (service.getClientLogat().getIsAdmin()==1) {
+                        adaugaSala();
+                        break;
+                    }
             }
         }
         else {
@@ -85,10 +110,65 @@ public class Vizual {
         }
     }
 
+    private void adaugaSala() {
+        System.out.print("Nr Locuri: ");
+        int nrLocuri = Integer.parseInt(s.nextLine());
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "insert into " + DatabaseSQL.getDbName() + ".sala (nrLocuri) " +
+                    "values(" + nrLocuri + ");";
+            myStmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void adaugaSpectacol() {
+        System.out.print("Id Sala: ");
+        int idSala = Integer.parseInt(s.nextLine());
+        System.out.print("Titlu: ");
+        String titlu = s.nextLine();
+        System.out.print("Durata: ");
+        int durata = Integer.parseInt(s.nextLine());
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "insert into " + DatabaseSQL.getDbName() + ".spectacol (idSala, titlu, data, durata) " +
+                    "values("+idSala+",'"+titlu + "','" + formatter.format(new Date()) + "'," + durata + ");";
+            myStmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void vizualizareRezervari() {
         Client client = service.getClientLogat();
-        for (Rezervare rezervare: client.getRezervari()) {
-            System.out.println(rezervare.getSpectacol() + " - " + rezervare.getLoc().getId());
+
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "select * from " + DatabaseSQL.getDbName() + ".rezervare r " +
+                    "join spectacol s where r.idSpectacol = s.idspectacol " +
+                    "and idClient=" + client.getId() + ";";
+
+            ResultSet rs = myStmt.executeQuery(sql);
+            while (rs.next()) {
+                int idRezervare = rs.getInt("idRezervare");
+                int idSpectacol = rs.getInt("idspectacol");
+                String titlu = rs.getString("titlu");
+                Date data = rs.getDate("data");
+                int durata = rs.getInt("durata");
+
+                System.out.println(titlu + " - " + data.toString());
+                //System.out.println(rezervare.getSpectacol() + " - " + rezervare.getLoc().getId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -129,6 +209,7 @@ public class Vizual {
     private void alegeSpectacol() {
         service.vizualizareSpectacole();
         int optiune = citesteInt();
+
         Spectacol spectacol = service.cautaSpectacol(optiune);
         if (spectacol != null) {
             Loc loc = spectacol.getSala().gasesteLoc();

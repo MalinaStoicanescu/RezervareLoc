@@ -2,9 +2,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Spectacol {
-    private static int nrSpectacole = 0;
     private int id;
-
     private String titlu;
     private int nrLocuri;
     private Sala sala;
@@ -43,13 +41,12 @@ public class Spectacol {
         this.durata = durata;
     }
 
-    public Spectacol(String titlu, Sala sala, Date data, int durata) {
+    public Spectacol(int id, String titlu, Sala sala, Date data, int durata) {
         this.titlu = titlu;
         this.sala = sala;
         this.data = data;
         this.durata = durata;
-        nrSpectacole ++;
-        id = nrSpectacole;
+        this.id = id;
     }
 
     public int getId() {

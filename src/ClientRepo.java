@@ -1,3 +1,8 @@
+import database.DatabaseSQL;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +21,26 @@ public class ClientRepo implements Repo<Client> {
     }
 
     public Client verifica(Client client) {
-        for (Client client1 : clienti) {
-            if (client1.nume.equals(client.nume) && client1.parola.equals(client.parola))
-                return client1;
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "select * from " + DatabaseSQL.getDbName() + ".user " +
+                          "where nume='" + client.getNume() + "' and parola='" + client.getParola() + "';";
+            ResultSet rs = myStmt.executeQuery(sql);
+
+            while (rs.next()) {
+                System.out.println(rs.getString("nume"));
+                String nume = rs.getString("nume");
+                String parola = rs.getString("parola");
+                int isAdmin = rs.getInt("isAdmin");
+                int id = rs.getInt("idUser");
+
+                return new Client(id, nume, parola, isAdmin);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 

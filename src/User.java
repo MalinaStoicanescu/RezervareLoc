@@ -1,8 +1,9 @@
 public abstract class User {
     private static int nrUseri = 0;
     int id;
-    String nume;
-    String parola;
+    private String nume;
+    private String parola;
+    int isAdmin;
 
     public User(String nume, String parola) {
         this.nume = nume;
@@ -10,6 +11,17 @@ public abstract class User {
 
         nrUseri++;
         id = nrUseri;
+    }
+
+    public User(int id, String nume, String parola, int isAdmin) {
+        this.id = id;
+        this.nume = nume;
+        this.parola = parola;
+        this.isAdmin = isAdmin;
+    }
+
+    public int getIsAdmin() {
+        return isAdmin;
     }
 
     public int getId() {

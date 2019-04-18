@@ -1,3 +1,8 @@
+import database.DatabaseSQL;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,8 +13,6 @@ public class Service {
     private List<Spectacol> spectacole = new ArrayList<>();
 
     public Service() {
-        spectacole.add(new Spectacol("Romeo si Julieta", new Sala(50), new Date(), 120));
-        spectacole.add(new Spectacol("Frumoasa si Bestia", new Sala(60), new Date(),100));
     }
 
     public Client getClientLogat() {
@@ -17,23 +20,54 @@ public class Service {
     }
 
     public Spectacol cautaSpectacol(int id){
-        for (Spectacol spectacol: spectacole) {
+        for (Spectacol spectacol : spectacole) {
             if (spectacol.getId() == id)
                 return spectacol;
         }
         return null;
-
     }
 
-    public void vizualizareSpectacole(){
-        for(Spectacol spectacol: spectacole) {
-            System.out.println(spectacol);
+    public void vizualizareSpectacole() {
+        spectacole.clear();
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "select * from " + DatabaseSQL.getDbName() + ".spectacol spec join " +
+                    DatabaseSQL.getDbName() + ".sala sa where sa.idSala = spec.idSala;";
+            ResultSet rs = myStmt.executeQuery(sql);
+
+            while (rs.next()) {
+                int idSpectacol = rs.getInt("idspectacol");
+                String titlu = rs.getString("titlu");
+                Date data = rs.getDate("data");
+                int durata = rs.getInt("durata");
+
+                int nrLocuriSala = rs.getInt("nrLocuri");
+                int idSala = rs.getInt("idSala");
+                Sala sala = new Sala(idSala, nrLocuriSala);
+
+                Spectacol spectacol = new Spectacol(idSpectacol, titlu, sala, data, durata);
+                spectacole.add(spectacol);
+                System.out.println(spectacol);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 
-    public void inregistreazaClientNou(String nume, String parola){
-        Client client = new Client(nume, parola);
-        clienti.adauga(client);
+    public void inregistreazaClientNou(String nume, String parola) {
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "insert into " + DatabaseSQL.getDbName() + ".user (nume, parola, isAdmin) " +
+                    "values('" + nume + "','" + parola + "',0);";
+            myStmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean suntLogat() {
@@ -49,7 +83,6 @@ public class Service {
         clientLogat = clienti.verifica(client);
         if (clientLogat != null)
         {
-
             return true;
         }
         return false;
