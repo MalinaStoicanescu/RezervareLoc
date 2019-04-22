@@ -37,8 +37,8 @@ public class Client extends User {
         DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
         try {
             Statement myStmt = databaseSQL.get_connection().createStatement();
-            String sql = "insert into " + DatabaseSQL.getDbName() + ".rezervare (idLoc, idClient, idSpectacol) values('"+
-                  rezervare.getLoc().getId() + "','" + rezervare.getClient().getId() + "', '" + rezervare.getSpectacol().getId() + "');";
+            String sql = "insert into " + DatabaseSQL.getDbName() + ".rezervare (idLoc, idClient, idSpectacol) values("+
+                  rezervare.getLoc().getId() + "," + rezervare.getClient().getId() + ", " + rezervare.getSpectacol().getId() + ");";
 
             myStmt.executeUpdate(sql);
 

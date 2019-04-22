@@ -12,10 +12,10 @@ public class Sala {
     private int nrLocuri;
     private List<Loc> locuri;
 
-    public Sala(int id, int nrLocuri) {
+    public Sala(int id, int nrLocuri, int idSpectacol) {
         this.nrLocuri = nrLocuri;
         this.id = id;
-        initializareSala();
+        initializareSala(idSpectacol);
     }
 
     public int getId() {
@@ -30,28 +30,27 @@ public class Sala {
         return locuri;
     }
     
-    public void initializareSala()
+    public void initializareSala(int idSpectacol)
     {
         locuri = new ArrayList<>();
-        for(int i = 1; i <= nrLocuri; i++)
+        for(int i = 0; i <= nrLocuri; i++)
         {
-            locuri.add(new Loc(0,this,true));
+            locuri.add(new Loc(i,this,true));
         }
 
         DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
         try {
             Statement myStmt = databaseSQL.get_connection().createStatement();
             String sql = "select * from " + DatabaseSQL.getDbName() + ".loc " +
-                         "where idSala=" + this.id + ";";
+                         "where idSpectacol=" + idSpectacol + ";";
             ResultSet rs = myStmt.executeQuery(sql);
 
             while (rs.next()) {
                 int liber = rs.getInt("liber");
-                int nrLoc = rs.getInt("nrLoc");
                 int idLoc = rs.getInt("idLoc");
                 Loc loc = new Loc(idLoc, this, liber==1);
 
-                locuri.set(nrLoc, loc);
+                locuri.set(idLoc, loc);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,17 +58,29 @@ public class Sala {
 
     }
 
-    public void actualizeazaLoc(int id)
+    public void actualizeazaLoc(int id, int idSpectacol)
     {
         Loc loc = locuri.get(id);
         loc.setLiber(!loc.isLiber());
+
+        DatabaseSQL databaseSQL = DatabaseSQL.getInstance();
+        try {
+            Statement myStmt = databaseSQL.get_connection().createStatement();
+            String sql = "insert into " + DatabaseSQL.getDbName() + ".loc (idLoc, idSpectacol, liber) values("+
+                    id + "," + idSpectacol + ", " + loc.isLiber() + ");";
+
+            myStmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Loc gasesteLoc() {
-        for (int i = 0; i < nrLocuri; i++)
+    public Loc gasesteLoc(int idSpectacol) {
+        for (int i = 1; i <= nrLocuri; i++)
         {
             if (locuri.get(i).isLiber()) {
-                actualizeazaLoc(i);
+                actualizeazaLoc(i, idSpectacol);
                 return locuri.get(i);
             }
         }

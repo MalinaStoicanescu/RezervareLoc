@@ -1,5 +1,6 @@
 import database.DatabaseSQL;
 
+import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,9 +12,14 @@ import java.util.Scanner;
 
 public class Vizual {
     private Scanner s = new Scanner(System.in);
-    private Service service = new Service();
+    private Service service = Service.getInstance();
 
     public static void main(String[] args) {
+        Login frame = new Login();
+        frame.setTitle("Login Form");
+        frame.setVisible(true);
+        frame.setBounds(10,10,370,600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Vizual aplicatie = new Vizual();
 
         while(true){
@@ -212,7 +218,7 @@ public class Vizual {
 
         Spectacol spectacol = service.cautaSpectacol(optiune);
         if (spectacol != null) {
-            Loc loc = spectacol.getSala().gasesteLoc();
+            Loc loc = spectacol.getSala().gasesteLoc(spectacol.getId());
             if (loc != null) {
                 Rezervare rezervare = new Rezervare(spectacol, loc, service.getClientLogat());
                 service.getClientLogat().adaugaRezervare(rezervare);
