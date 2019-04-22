@@ -66,10 +66,10 @@ public class Meniu extends JFrame implements ActionListener {
         container.add(rezervare);
         container.add(loc);
         locuriTextFiels.add(loc);
-        JButton butonEditare = new JButton("E");
-        JButton butonStergere = new JButton("S");
-        butonEditare.setBounds(255, y, 50, 30);
-        butonStergere.setBounds(310, y, 50, 30);
+        JButton butonEditare = new JButton();
+        JButton butonStergere = new JButton();
+        butonEditare.setBounds(255, y, 100, 30);
+        butonStergere.setBounds(360, y, 100, 30);
         Meniu m = this;
         butonEditare.setAction(new AbstractAction() {
             @Override
@@ -98,6 +98,8 @@ public class Meniu extends JFrame implements ActionListener {
 
             }
         });
+        butonEditare.setText("EDITARE");
+        butonStergere.setText("STERGERE");
         editStergereButoane.add(butonEditare);
         editStergereButoane.add(butonStergere);
         container.add(butonEditare);

@@ -12,7 +12,7 @@ public class Login extends JFrame implements ActionListener {
     JLabel numeLabel = new JLabel("NUME:");
     JLabel parolaLabel = new JLabel("PAROLA");
     JTextField numeText = new JTextField();
-    JTextField parolaText = new JTextField();
+    JPasswordField parolaText = new JPasswordField();
     JButton butonLogin = new JButton("LOGIN");
     JButton butonRegister = new JButton("REGISTER");
 
@@ -26,7 +26,6 @@ public class Login extends JFrame implements ActionListener {
     }
     public void setLayoutManager() {
         container.setLayout(null);
-
     }
 
     public void setLocationAndSize() {
